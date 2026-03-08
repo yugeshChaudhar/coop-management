@@ -217,7 +217,7 @@ function MembersPage() {
   const [members, setMembers] = useState([]);
   const [form, setForm] = useState({
     member_number: '', member_name: '', address: '', phone: '',
-    email: '', membership_type: 'Saving', joined_date: '', status: 'Active'
+    email: '', membership_type: 'Saving', joined_date_bs: '', status: 'Active'
   });
   const [editingId, setEditingId] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -262,7 +262,7 @@ function MembersPage() {
       
       if (data.success || res.ok) {
         alert(editingId ? 'Member updated successfully!' : 'Member added successfully!');
-        setForm({ member_number: '', member_name: '', address: '', phone: '', email: '', membership_type: 'Saving', joined_date: '', status: 'Active' });
+        setForm({ member_number: '', member_name: '', address: '', phone: '', email: '', membership_type: 'Saving', joined_date_bs: '', status: 'Active' });
         setEditingId(null);
         setShowModal(false);
         fetchMembers();
@@ -327,7 +327,7 @@ function MembersPage() {
       <div className="main-content">
         <header className="dashboard-header">
           <h1>Members Management</h1>
-          <button className="btn-primary" onClick={() => { setForm({ member_number: '', member_name: '', address: '', phone: '', email: '', membership_type: 'Saving', joined_date: '', status: 'Active' }); setEditingId(null); setShowModal(true); }}>+ Add Member</button>
+          <button className="btn-primary" onClick={() => { setForm({ member_number: '', member_name: '', address: '', phone: '', email: '', membership_type: 'Saving', joined_date_bs: '', status: 'Active' }); setEditingId(null); setShowModal(true); }}>+ Add Member</button>
         </header>
         <div className="page-content">
           {showModal && (
@@ -370,15 +370,18 @@ function MembersPage() {
                       <label>Membership Type</label>
                       <select value={form.membership_type} onChange={e => setForm({...form, membership_type: e.target.value})}>
                         <option value="Saving">Saving</option>
-                        <option value="Regular">Regular</option>
-                        <option value="Special">Special</option>
+                        <option value="Share">Share</option>
+                        <option value="Loan">Loan</option>
+                        <option value="Normal">Normal</option>
+                        <option value="Chairperson">Chairperson</option>
+                        <option value="Staff">Staff</option>
                       </select>
                     </div>
                   </div>
                   <div className="form-row">
                     <div className="form-group">
-                      <label>Joined Date</label>
-                      <input type="date" value={form.joined_date} onChange={e => setForm({...form, joined_date: e.target.value})} />
+                      <label>Joined Date (BS)</label>
+                      <input type="text" value={form.joined_date_bs} onChange={e => setForm({...form, joined_date_bs: e.target.value})} placeholder="2081-01-01" />
                     </div>
                     <div className="form-group">
                       <label>Status</label>
@@ -414,7 +417,7 @@ function MembersPage() {
                       <div><strong>Email:</strong> {viewingMember.email}</div>
                       <div><strong>Address:</strong> {viewingMember.address}</div>
                       <div><strong>Type:</strong> {viewingMember.membership_type}</div>
-                      <div><strong>Joined:</strong> {viewingMember.joined_date}</div>
+                      <div><strong>Joined:</strong> {viewingMember.joined_date_bs}</div>
                       <div><strong>Status:</strong> {viewingMember.status}</div>
                     </div>
                   </div>
