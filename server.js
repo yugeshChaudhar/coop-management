@@ -32,7 +32,10 @@ pool.on('error', (err) => {
 });
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL || ['http://localhost:3000', 'http://localhost:3001', 'https://coop-management-ifem.vercel.app'],
+  credentials: true
+}));
 app.use(express.json());
 
 // Ensure uploads directory exists
@@ -348,6 +351,30 @@ app.post('/api/auth/login', async (req, res) => {
       token, 
       user: { id: user.id, username: user.username, email: user.email, name: user.full_name, photo: user.profile_photo, role: user.role }
     });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Simple login endpoint (for Vercel frontend)
+app.post('/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    
+    const result = await pool.query(
+      "SELECT * FROM users WHERE username=$1",
+      [username]
+    );
+    
+    if (!result.rows.length) {
+      return res.json({ success: false });
+    }
+    
+    if (password === result.rows[0].password) {
+      res.json({ success: true });
+    } else {
+      res.json({ success: false });
+    }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

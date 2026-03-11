@@ -2,16 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
 import './App.css';
 
-// API Base URL - dynamically set based on environment
-const API_BASE = window.location.hostname === 'localhost' 
-  ? 'http://localhost:3001/api' 
-  : '/api';
+// API Base URL from environment variable or default to Render backend
+const API_BASE = process.env.REACT_APP_API_URL || 'https://coop-management-2.onrender.com/api';
 
 // Helper to get full image URL
 const getImageUrl = (path) => {
   if (!path) return null;
   if (path.startsWith('http')) return path;
-  return `http://localhost:3001/uploads/${path}`;
+  return `${API_BASE.replace('/api', '')}/uploads/${path}`;
 };
 
 // Login Page
