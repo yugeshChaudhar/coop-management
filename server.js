@@ -396,6 +396,52 @@ app.get('/api/auth/me', authenticateToken, async (req, res) => {
   }
 });
 
+// Profile endpoint (alias for /api/auth/me)
+app.get('/api/profile', authenticateToken, async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT id, username, email, full_name, profile_photo, role, created_at FROM users WHERE id = $1',
+      [req.user.id]
+    );
+    const user = result.rows[0];
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json({ success: true, user });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update profile
+app.put('/api/profile', authenticateToken, async (req, res) => {
+  try {
+    const { full_name, email } = req.body;
+    
+    await pool.query(
+      'UPDATE users SET full_name = $1, email = $2 WHERE id = $3',
+      [full_name, email, req.user.id]
+    );
+    
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+    const result = await pool.query(
+      'SELECT id, username, email, full_name, profile_photo, role, created_at FROM users WHERE id = $1',
+      [req.user.id]
+    );
+    const user = result.rows[0];
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json({ success: true, user });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // ============ CITIZENSHIP ROUTES ============
 
 app.post('/api/citizenship', authenticateToken, upload.fields([
